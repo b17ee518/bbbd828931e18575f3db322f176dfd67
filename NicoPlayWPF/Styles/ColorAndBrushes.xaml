@@ -1,0 +1,46 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--Dark Title Color-->
+    <Color x:Key="TitleColor">#2d2d30</Color>
+    <SolidColorBrush x:Key="TitleBrush" Color="{StaticResource TitleColor}" />
+
+    <!--Normal Background Color-->
+    <Color x:Key="BGColor">#444444</Color>
+    <SolidColorBrush x:Key="BGBrush" Color="{StaticResource BGColor}" />
+
+    <!--Button Colors-->
+    <Color x:Key="HoverColor">#808080</Color>
+    <SolidColorBrush x:Key="HoverBrush" Color="{StaticResource HoverColor}" />
+    <Color x:Key="CheckedColor">#505050</Color>
+    <SolidColorBrush x:Key="CheckedBrush" Color="{StaticResource CheckedColor}" />
+    <Color x:Key="RedColor">#ff0000</Color>
+    <SolidColorBrush x:Key="RedBrush" Color="{StaticResource RedColor}" />
+
+    <!--Progress Bar-->
+    <Color x:Key="LimeProgressColor">#676737</Color>
+    <SolidColorBrush x:Key="LimeProgressBrush" Color="{StaticResource LimeProgressColor}" />
+    <Color x:Key="BrownProgressColor">#675437</Color>
+    <SolidColorBrush x:Key="BrownProgressBrush" Color="{StaticResource BrownProgressColor}" />
+    <Color x:Key="GreenProgressColor">#376737</Color>
+    <SolidColorBrush x:Key="GreenProgressBrush" Color="{StaticResource GreenProgressColor}" />
+
+    <!--Text Color-->
+    <Color x:Key="WhiteTextColor">#ffffff</Color>
+    <SolidColorBrush x:Key="WhiteTextBrush" Color="{StaticResource WhiteTextColor}"/>
+    <Color x:Key="YellowTextColor">#ffff00</Color>
+    <SolidColorBrush x:Key="YellowTextBrush" Color="{StaticResource YellowTextColor}"/>
+    <Color x:Key="OrangeTextColor">#ff9900</Color>
+    <SolidColorBrush x:Key="OrangeTextBrush" Color="{StaticResource OrangeTextColor}"/>
+    <Color x:Key="RedTextColor">#ff0000</Color>
+    <SolidColorBrush x:Key="RedTextBrush" Color="{StaticResource RedTextColor}"/>
+    <Color x:Key="GrayTextColor">#c0c0c0</Color>
+    <SolidColorBrush x:Key="GrayTextBrush" Color="{StaticResource GrayTextColor}"/>
+    <Color x:Key="BlueTextColor">#0000ff</Color>
+    <SolidColorBrush x:Key="BlueTextBrush" Color="{StaticResource BlueTextColor}"/>
+    <Color x:Key="AquaTextColor">#99ffff</Color>
+    <SolidColorBrush x:Key="AquaTextBrush" Color="{StaticResource AquaTextColor}"/>
+
+
+
+</ResourceDictionary>
