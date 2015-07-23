@@ -78,7 +78,8 @@
                         Name="shadowOffButton"
                         Content="SS" DockPanel.Dock="Right" Width="24" VerticalAlignment="Center"
                         Checked="ShadowOffButton_Checked" Unchecked="ShadowOffButton_Unchecked" FontWeight="Bold"
-                        Style="{StaticResource KToggleButtonStyle}" />
+                        Style="{StaticResource KToggleButtonStyle}"
+                        IsChecked="True"/>
                     <ToggleButton 
                         Name="commentOffButton"
                         Content="On" DockPanel.Dock="Right" Width="24" VerticalAlignment="Center"
