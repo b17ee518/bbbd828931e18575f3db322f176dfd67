@@ -45,3 +45,4 @@ Temporary Items
 # Develop
 NicoPlayWPF/bin
 NicoPlayWPF/obj
+*.suo
