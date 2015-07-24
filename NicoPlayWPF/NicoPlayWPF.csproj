@@ -84,6 +84,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ControlBase\KOutLinedTextBlock.cs" />
     <Compile Include="ControlBase\KTitleFrameBase.cs" />
     <Compile Include="Models\ColorTypeModel.cs" />
     <Compile Include="Models\Model.cs" />

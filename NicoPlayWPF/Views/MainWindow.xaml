@@ -41,7 +41,7 @@
         VerticalAlignment="Stretch" 
         Height="Auto">
 
-        <DockPanel>
+        <DockPanel LastChildFill="True">
 
             <ControlBase:KTitleFrame x:Name="TitleFrame" DockPanel.Dock="Top" Background="{StaticResource TitleBrush}" Orientation="Horizontal" FlowDirection="RightToLeft">
                 <Button Name="closeButton" HorizontalAlignment="Right" VerticalAlignment="Center" MinHeight="20" MaxHeight="20" MinWidth="20" MaxWidth="20" 
@@ -55,7 +55,7 @@
                         Click="minimizeButton_Click">
                 </Button>
             </ControlBase:KTitleFrame>
-            <Grid DockPanel.Dock="Bottom">
+            <Grid Name="BottomBar" DockPanel.Dock="Bottom">
 
                 <DockPanel Height="24" MinHeight="24" MaxHeight="24">
                     <ToggleButton 
@@ -100,10 +100,8 @@
                 <Grid>
                     <Grid Name="container" Panel.ZIndex="2" IsHitTestVisible="False">
                     </Grid>
-                    <MediaElement Name="me" Panel.ZIndex="1" Stretch="UniformToFill"
-                                  LoadedBehavior="Manual" ScrubbingEnabled="True">
-
-                    </MediaElement>
+                    <MediaElement Name="me" Panel.ZIndex="1"
+                                  LoadedBehavior="Manual" ScrubbingEnabled="True"/>
                 </Grid>
             </StackPanel>
 

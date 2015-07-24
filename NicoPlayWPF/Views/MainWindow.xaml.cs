@@ -42,7 +42,7 @@ namespace NicoPlayWPF.Views
         Size _videoSize = new Size(512, 384);
         double _adjustedHeight = 384.0;
         
-        const int timeTickInterval = 30;
+        const int timeTickInterval = 35;
 
         string _videoName = "";
 
@@ -65,6 +65,9 @@ namespace NicoPlayWPF.Views
         public MainWindow()
         {
             InitializeComponent();
+            this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight - 8;
+            this.MaxWidth = SystemParameters.MaximizedPrimaryScreenWidth - 8;
+            this.StateChanged += MainWindow_StateChanged;
 
             this.Closing += MainWindow_Closing;
             LoadWindowPos();
@@ -72,6 +75,8 @@ namespace NicoPlayWPF.Views
             me.MediaOpened += Me_MediaOpened;
             me.MediaEnded += Me_MediaEnded;
             me.SizeChanged += Me_SizeChanged;
+
+            this.SizeChanged += MainWindow_SizeChanged;
 
             me.MouseLeftButtonDown += Container_MouseLeftButtonDown;
 
@@ -81,13 +86,25 @@ namespace NicoPlayWPF.Views
             _timer.Tick += Timer_Tick;
             _timer.Start();
 
-//            OpenVideo("e:/NicoPlay/testVideo/元プロゲーマーが塗りつくスプラトゥーン！Sp：11【実況】(sm26704977).mp4");
+            OpenVideo("e:/NicoPlay/testVideo/元プロゲーマーが塗りつくスプラトゥーン！Sp：11【実況】(sm26704977).mp4");
 
             volSlider.ValueChanged += VolSlider_ValueChanged;
             positionSlider.ValueChanged += PositionSlider_ValueChanged;
 
             LoadSettings();
 
+        }
+
+        void MainWindow_StateChanged(object sender, EventArgs e)
+        {
+            if (this.WindowState == System.Windows.WindowState.Maximized)
+            {
+            }
+        }
+
+        void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            me.MaxHeight = this.ActualHeight - TitleFrame.ActualHeight - BottomBar.ActualHeight;
         }
 
         void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -185,8 +202,8 @@ namespace NicoPlayWPF.Views
         {            
             Size newSize = new Size(me.ActualWidth, me.ActualHeight);
 
-//            container.Width = newSize.Width;
-//            container.Height = newSize.Height;
+            container.Width = newSize.Width;
+            container.Height = newSize.Height;
 
 	        double wScale = newSize.Width /_videoSize.Width;
 	        double hScale = newSize.Height / _videoSize.Height;
@@ -293,8 +310,12 @@ namespace NicoPlayWPF.Views
             string xmlpath = System.IO.Path.GetDirectoryName(path);
             xmlpath += "/";
             xmlpath += _videoName;
+            string pmxmlpath = xmlpath;
+            pmxmlpath += ".postmaster.xml";
             xmlpath += ".xml";
+            _comments.clearComments();
             _comments.ReadFromXML(xmlpath);
+            _comments.ReadFromXML(pmxmlpath);
             me.Play();
             me.Pause();
 

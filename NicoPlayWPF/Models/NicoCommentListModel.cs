@@ -8,6 +8,7 @@ using NicoPlayWPF.ViewModels;
 using System.Xml;
 using System.Windows.Media;
 using System.Windows.Controls;
+using System.IO;
 
 namespace NicoPlayWPF.Models
 {
@@ -115,10 +116,19 @@ namespace NicoPlayWPF.Models
 
         public bool ReadFromXML(string path)
         {
-            clearComments();
-
+            if (!File.Exists(path))
+            {
+                return false;
+            }
             XmlDocument doc = new XmlDocument();
-            doc.Load(path);
+            try
+            {
+            	doc.Load(path);
+            }
+            catch (System.Exception ex)
+            {
+                return false;
+            }
 
             XmlElement elem = doc.DocumentElement;
 
@@ -137,7 +147,7 @@ namespace NicoPlayWPF.Models
                 if (vposMSec >= lastMSec && vposMSec < curMSec)
                 {
 			        NicoLabel label = new NicoLabel();
-                    label.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+//                    label.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
                     // child of
                     container.Children.Add(label);
 

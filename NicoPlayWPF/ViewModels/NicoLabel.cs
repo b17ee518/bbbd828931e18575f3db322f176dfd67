@@ -19,7 +19,7 @@ using System.Windows.Media.Effects;
 
 namespace NicoPlayWPF.ViewModels
 {
-    public class NicoLabel : TextBlock
+    public class NicoLabel : KOutlinedTextBlock
     {
         /* コマンド、プロパティの定義にはそれぞれ 
          * 
@@ -79,6 +79,9 @@ namespace NicoPlayWPF.ViewModels
 
         double _shadowDepth = 2.0;
 
+        double _space = 4.0;
+        double _strokeThickness = 0.75;
+
         public void Initialize()
         {
             this.IsHitTestVisible = false;
@@ -93,13 +96,14 @@ namespace NicoPlayWPF.ViewModels
         {
             this.Text = config.Text;
 
-            this.Foreground = new SolidColorBrush(config.TextColor);
+            this.Fill = new SolidColorBrush(config.TextColor);
 
             _posGroup = config.PosGroup;
             this.FontFamily = new FontFamily("MS PGothic");
             this.FontSize = config.FontSize;
-            this.FontWeight = FontWeights.UltraBlack;
-            
+            this.FontWeight = FontWeights.UltraBold;
+            this.TextTrimming = System.Windows.TextTrimming.None;
+            this.TextWrapping = System.Windows.TextWrapping.NoWrap;
 
 //            this->adjustSize();
 //            this->setAttribute(Qt::WA_TranslucentBackground);
@@ -109,7 +113,7 @@ namespace NicoPlayWPF.ViewModels
         
         private void initReady()
         {
-            Measure(new Size());
+            Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             Arrange(new Rect(0, 0, ActualWidth, ActualHeight));
 
             _origSize = new Size(ActualWidth, ActualHeight);
@@ -139,7 +143,7 @@ namespace NicoPlayWPF.ViewModels
 //            this->resize(size);
             this.FontSize = fontSize;
 
-            Measure(new Size());
+            Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             Arrange(new Rect(0, 0, ActualWidth, ActualHeight));
 
             _actualWidth = ActualWidth;
@@ -171,6 +175,13 @@ namespace NicoPlayWPF.ViewModels
                 effect.Opacity = 1.0;
                 effect.BlurRadius = 0;
                 this.Effect = effect;
+
+                this.StrokeThickness = 0.0;
+            }
+            else
+            {
+                this.Stroke = new SolidColorBrush(Color.FromRgb(0, 0, 0));
+                this.StrokeThickness = _strokeThickness;
             }
 
             _xSpeed = (w + _origSize.Width*scale) / 4000.0f / scale;
@@ -181,18 +192,18 @@ namespace NicoPlayWPF.ViewModels
             if (_posGroup == PosGroupType.Normal)
             {
                 setPosX(w);
-                setPosY(0); 
+                setPosY(_space); 
             }
             else
             {
                 setPosX(w / 2 - this.getWidth() / 2);
                 if (_posGroup == PosGroupType.Top)
                 {
-                    setPosY(0);
+                    setPosY(_space);
                 }
                 else
                 {
-                    setPosY(h - this.getHeight());
+                    setPosY(h - this.getHeight() - _space);
                 }
 
             }
@@ -253,24 +264,24 @@ namespace NicoPlayWPF.ViewModels
         
         public bool moveDown(double bottom)
         {
-            double height = this.getHeight() + 1;
+            double height = this.getHeight() + _space;
             Random rand = new Random();
             if (_posGroup == PosGroupType.Bottom)
             {
                 // move up
-                if (y() - height < 0)
+                if (y() - height < _space)
                 {
                     _bOverflow = true;
-                    setPosY(rand.Next((int)(bottom-height)));
+                    setPosY(rand.Next((int)(bottom-height-_space*2))+_space);
                     return false;
                 }
                 setPosY(y()-height);
                 return true;
             }
-            if (y() + 2*height > bottom)
+            if (y() + 2*height > bottom-_space)
             {
                 _bOverflow = true;
-                setPosY(rand.Next((int)(bottom-height)));
+                setPosY(rand.Next((int)(bottom-height-_space*2))+_space);
                 return false;
             }
             setPosY(y()+height);
@@ -279,6 +290,9 @@ namespace NicoPlayWPF.ViewModels
 
         public bool collideWith(NicoLabel other)
         {
+            double thisHeight = this.getHeight() + _space;
+            double otherHeight = other.getHeight() + _space;
+
             if (_bOverflow || other.isOverflow())
             {
                 return false;
@@ -289,11 +303,11 @@ namespace NicoPlayWPF.ViewModels
                 return false;
             }
 
-            if (this.y()+this.getHeight() <= other.y())
+            if (this.y()+thisHeight <= other.y())
             {
                 return false;
             }
-            if (this.y() >= other.y() + other.getHeight())
+            if (this.y() >= other.y() + otherHeight)
             {
                 return false;
             }
