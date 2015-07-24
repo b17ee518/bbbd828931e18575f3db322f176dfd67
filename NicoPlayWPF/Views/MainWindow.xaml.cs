@@ -51,6 +51,8 @@ namespace NicoPlayWPF.Views
         NicoLabelListModel _labels = new NicoLabelListModel();
         NicoCommentListModel _comments = new NicoCommentListModel();
 
+        public static RoutedCommand s_playStopCommand = new RoutedCommand();
+
         protected override void OnSourceInitialized(EventArgs e)
         {
             if (_useSoftwareOnly)
@@ -68,6 +70,9 @@ namespace NicoPlayWPF.Views
             this.MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight - 8;
             this.MaxWidth = SystemParameters.MaximizedPrimaryScreenWidth - 8;
             this.StateChanged += MainWindow_StateChanged;
+
+            s_playStopCommand.InputGestures.Add(new KeyGesture(Key.Space));
+            this.CommandBindings.Add(new CommandBinding(s_playStopCommand, PlayStopCommandHandler));
 
             this.Closing += MainWindow_Closing;
             LoadWindowPos();
@@ -93,6 +98,11 @@ namespace NicoPlayWPF.Views
 
             LoadSettings();
 
+        }
+
+        void PlayStopCommandHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            TogglePlayPause();
         }
 
         void MainWindow_StateChanged(object sender, EventArgs e)
