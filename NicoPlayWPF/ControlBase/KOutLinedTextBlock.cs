@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 [ContentProperty("Text")]
 public class KOutlinedTextBlock : FrameworkElement
@@ -79,6 +80,8 @@ public class KOutlinedTextBlock : FrameworkElement
 
     private FormattedText formattedText;
     private Geometry textGeometry;
+
+    private RenderTargetBitmap bmp = null;
 
     public KOutlinedTextBlock()
     {
@@ -163,12 +166,34 @@ public class KOutlinedTextBlock : FrameworkElement
         get { return (TextWrapping)GetValue(TextWrappingProperty); }
         set { SetValue(TextWrappingProperty, value); }
     }
-
+    private bool _firstDraw = false;
+    private bool _firstDrawDone = false;
+    public void setFirstDraw()
+    {
+        _firstDraw = true;
+        _firstDrawDone = false;
+    }
     protected override void OnRender(DrawingContext drawingContext)
     {
-        this.EnsureGeometry();
-
-        drawingContext.DrawGeometry(this.Fill, new Pen(this.Stroke, this.StrokeThickness), this.textGeometry);
+        if (bmp == null && !_firstDraw && _firstDrawDone)
+        {
+            bmp = new RenderTargetBitmap((int)this.ActualWidth + 1, (int)this.ActualHeight + 1, 96, 96, PixelFormats.Pbgra32);
+            bmp.Render(this);
+        }
+        else if (bmp != null && !_firstDraw)
+        {
+            drawingContext.DrawImage(bmp, new Rect(0, 0, bmp.Width, bmp.Height));
+        }
+        else
+        {
+            this.EnsureGeometry();
+            drawingContext.DrawGeometry(this.Fill, new Pen(this.Stroke, this.StrokeThickness), this.textGeometry);
+            if (_firstDraw)
+            {
+                _firstDraw = false;
+                _firstDrawDone = true;
+            }
+        }
     }
 
     protected override Size MeasureOverride(Size availableSize)
@@ -265,5 +290,6 @@ public class KOutlinedTextBlock : FrameworkElement
 
         this.EnsureFormattedText();
         this.textGeometry = this.formattedText.BuildGeometry(new Point(0, 0));
+
     }
 }

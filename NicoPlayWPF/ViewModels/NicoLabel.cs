@@ -142,7 +142,6 @@ namespace NicoPlayWPF.ViewModels
 
 //            this->resize(size);
             this.FontSize = fontSize;
-
             Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             Arrange(new Rect(0, 0, ActualWidth, ActualHeight));
 
@@ -155,6 +154,7 @@ namespace NicoPlayWPF.ViewModels
                 effect.ShadowDepth = _shadowDepth * scale;
                 this.Effect = effect;
             }
+            setFirstDraw();
         }
 
         public void applyNewScale(double scale, double relScale)
@@ -216,21 +216,25 @@ namespace NicoPlayWPF.ViewModels
 
         public double x()
         {
-            return this.Margin.Left;
+//            return this.Margin.Left;
+            return (RenderTransform as TranslateTransform).X;
         }
         public double y()
         {
-            return this.Margin.Top;
+//            return this.Margin.Top;
+            return (RenderTransform as TranslateTransform).Y;
         }
         public void setPosX(double x)
         {
             _x = x;
-            this.Margin = new Thickness(_x, Margin.Top, Margin.Right, Margin.Bottom);
+            this.RenderTransform = new TranslateTransform(_x, _y);
+//            this.Margin = new Thickness(_x, Margin.Top, Margin.Right, Margin.Bottom);
         }
         public void setPosY(double y)
         {
             _y = y;
-            this.Margin = new Thickness(Margin.Left, _y, Margin.Right, Margin.Bottom);
+            this.RenderTransform = new TranslateTransform(_x, _y);
+//            this.Margin = new Thickness(Margin.Left, _y, Margin.Right, Margin.Bottom);
         }
 
         public double getXSpeed()

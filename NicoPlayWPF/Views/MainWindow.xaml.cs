@@ -42,7 +42,7 @@ namespace NicoPlayWPF.Views
         Size _videoSize = new Size(512, 384);
         double _adjustedHeight = 384.0;
         
-        const int timeTickInterval = 35;
+        const int timeTickInterval = 1;
 
         string _videoName = "";
 
