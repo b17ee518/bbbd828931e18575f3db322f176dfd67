@@ -54,6 +54,10 @@
                         Style="{StaticResource KTitleButtonStyle}"
                         Click="minimizeButton_Click">
                 </Button>
+                <Button x:Name="deleteButton" HorizontalAlignment="Right" VerticalAlignment="Center" MinHeight="20" MaxHeight="20" MinWidth="20" MaxWidth="20" Margin="40, 0, 0, 0"
+                	Content="Φ"
+                	Style="{StaticResource KTitleButtonStyle}"
+                	Click="deleteButton_Click"/>
             </ControlBase:KTitleFrame>
             <Grid Name="BottomBar" DockPanel.Dock="Bottom">
 

@@ -58,11 +58,11 @@ namespace NicoPlayWPF.Models
             labels.Clear();
         }
         
-        public void applyNewScale(double scale, double relscale)
+        public void applyNewScale(double scale, double relscale, double w)
         {
             foreach (NicoLabel label in labels)
             {
-                label.applyNewScale(scale, relscale);
+                label.applyNewScale(scale, relscale, w);
             }
         }
 

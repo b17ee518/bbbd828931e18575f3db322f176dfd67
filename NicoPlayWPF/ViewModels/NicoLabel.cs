@@ -114,13 +114,15 @@ namespace NicoPlayWPF.ViewModels
         private void initReady()
         {
             Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-            Arrange(new Rect(0, 0, ActualWidth, ActualHeight));
+            double aw = this.formattedTextSize().Width;
+            double ah = this.formattedTextSize().Height;
+            Arrange(new Rect(0, 0, aw, ah));
 
-            _origSize = new Size(ActualWidth, ActualHeight);
+            _origSize = new Size(aw, ah);
             _origFontSize = this.FontSize;
 
-            _actualWidth = ActualWidth;
-            _actualHeight = ActualHeight;
+            _actualWidth = aw;
+            _actualHeight = ah;
         }
 
         public double getWidth()
@@ -143,10 +145,13 @@ namespace NicoPlayWPF.ViewModels
 //            this->resize(size);
             this.FontSize = fontSize;
             Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-            Arrange(new Rect(0, 0, ActualWidth, ActualHeight));
 
-            _actualWidth = ActualWidth;
-            _actualHeight = ActualHeight;
+            double aw = this.formattedTextSize().Width;
+            double ah = this.formattedTextSize().Height;
+            Arrange(new Rect(0, 0, aw, ah));
+
+            _actualWidth = aw;
+            _actualHeight = ah;
 
             if (_shadowDepth > 0)
             {
@@ -157,9 +162,24 @@ namespace NicoPlayWPF.ViewModels
             setFirstDraw();
         }
 
-        public void applyNewScale(double scale, double relScale)
+        public void adjustScaleByWidth(double scale, double w)
+        {
+            if (_posGroup == PosGroupType.Top || _posGroup == PosGroupType.Bottom)
+            {
+                if (this.getWidth() > w)
+                {
+                    double adjustScale = scale;
+                    adjustScale *= w / this.getWidth();
+                    setScale(adjustScale);
+                    setPosX(w / 2 - this.getWidth() / 2);
+                }
+            }
+        }
+
+        public void applyNewScale(double scale, double relScale, double w)
         {
 	        setScale(scale);
+            adjustScaleByWidth(scale, w);
 
 	        setPosX(x()*relScale);
 	        setPosY(y()*relScale);
@@ -205,7 +225,8 @@ namespace NicoPlayWPF.ViewModels
                 {
                     setPosY(h - this.getHeight() - _space);
                 }
-
+                
+                adjustScaleByWidth(scale, w);
             }
         }
 

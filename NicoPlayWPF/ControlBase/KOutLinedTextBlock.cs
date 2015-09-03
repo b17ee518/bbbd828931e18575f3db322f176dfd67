@@ -80,9 +80,7 @@ public class KOutlinedTextBlock : FrameworkElement
 
     private FormattedText formattedText;
     private Geometry textGeometry;
-
-    private RenderTargetBitmap bmp = null;
-
+    
     public KOutlinedTextBlock()
     {
         this.TextDecorations = new TextDecorationCollection();
@@ -166,23 +164,27 @@ public class KOutlinedTextBlock : FrameworkElement
         get { return (TextWrapping)GetValue(TextWrappingProperty); }
         set { SetValue(TextWrappingProperty, value); }
     }
+
     private bool _firstDraw = false;
     private bool _firstDrawDone = false;
+    private RenderTargetBitmap _bmp = null;
     public void setFirstDraw()
     {
         _firstDraw = true;
         _firstDrawDone = false;
+        _bmp = null;
     }
+
     protected override void OnRender(DrawingContext drawingContext)
     {
-        if (bmp == null && !_firstDraw && _firstDrawDone)
+        if (_bmp == null && !_firstDraw && _firstDrawDone)
         {
-            bmp = new RenderTargetBitmap((int)this.ActualWidth + 1, (int)this.ActualHeight + 1, 96, 96, PixelFormats.Pbgra32);
-            bmp.Render(this);
+            _bmp = new RenderTargetBitmap((int)this.ActualWidth + 1, (int)this.ActualHeight + 1, 96, 96, PixelFormats.Pbgra32);
+            _bmp.Render(this);
         }
-        else if (bmp != null && !_firstDraw)
+        else if (_bmp != null && !_firstDraw)
         {
-            drawingContext.DrawImage(bmp, new Rect(0, 0, bmp.Width, bmp.Height));
+            drawingContext.DrawImage(_bmp, new Rect(0, 0, _bmp.Width, _bmp.Height));
         }
         else
         {
@@ -194,6 +196,15 @@ public class KOutlinedTextBlock : FrameworkElement
                 _firstDrawDone = true;
             }
         }
+    }
+
+    public Size formattedTextSize()
+    {
+        if (this.formattedText != null)
+        {
+            return new Size(this.formattedText.Width, this.formattedText.Height);
+        }
+        return new Size(ActualWidth, ActualHeight);
     }
 
     protected override Size MeasureOverride(Size availableSize)
@@ -246,7 +257,7 @@ public class KOutlinedTextBlock : FrameworkElement
 
     private void EnsureFormattedText()
     {
-        if (this.formattedText != null || this.Text == null)
+        if (this.Text == null)
         {
             return;
         }

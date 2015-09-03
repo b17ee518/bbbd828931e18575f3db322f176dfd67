@@ -1,6 +1,7 @@
 ﻿using NicoPlayWPF.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -224,7 +225,7 @@ namespace NicoPlayWPF.Views
 
             setVideoItemSize(newSize);
 
-            _labels.applyNewScale(_scale, relScale);
+            _labels.applyNewScale(_scale, relScale, container.Width);
         }
 
         void setVideoItemSize(Size size)
@@ -235,6 +236,7 @@ namespace NicoPlayWPF.Views
         void Me_MediaEnded(object sender, RoutedEventArgs e)
         {
             Stop();
+            DeleteVideoAndXMLs();
         }
 
         void PositionSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -311,21 +313,26 @@ namespace NicoPlayWPF.Views
             positionSlider.Value = me.Position.TotalMilliseconds;
         }
 
+        private string _videoPath = null;
+        private string _xmlPath = null;
+        private string _pmxmlPath = null;
+
         void OpenVideo(String path)
         {
             Stop();
+            _videoPath = path;
             me.Source = new Uri(path);
 
             _videoName = System.IO.Path.GetFileNameWithoutExtension(path);
-            string xmlpath = System.IO.Path.GetDirectoryName(path);
-            xmlpath += "/";
-            xmlpath += _videoName;
-            string pmxmlpath = xmlpath;
-            pmxmlpath += ".postmaster.xml";
-            xmlpath += ".xml";
+            _xmlPath = System.IO.Path.GetDirectoryName(path);
+            _xmlPath += "/";
+            _xmlPath += _videoName;
+            _pmxmlPath = _xmlPath;
+            _pmxmlPath += ".postmaster.xml";
+            _xmlPath += ".xml";
             _comments.clearComments();
-            _comments.ReadFromXML(xmlpath);
-            _comments.ReadFromXML(pmxmlpath);
+            _comments.ReadFromXML(_xmlPath);
+            _comments.ReadFromXML(_pmxmlPath);
             me.Play();
             me.Pause();
 
@@ -478,6 +485,50 @@ namespace NicoPlayWPF.Views
         private void minimizeButton_Click(object sender, RoutedEventArgs e)
         {
             this.WindowState = System.Windows.WindowState.Minimized;
+        }
+
+        public void DeleteVideoAndXMLs()
+        {
+            if (_videoPath == null)
+            {
+                return;
+            }
+
+            string messageBoxText = _videoPath;
+            string caption = "Delete File";
+            MessageBoxButton button = MessageBoxButton.YesNo;
+            MessageBoxImage icon = MessageBoxImage.Warning;
+            MessageBoxResult result = MessageBox.Show(this, messageBoxText, caption, button, icon, MessageBoxResult.No);
+
+            // Process message box results
+            switch (result)
+            {
+                case MessageBoxResult.Yes:
+                    {
+                        if (_videoPath != null)
+                        {
+                            File.Delete(_videoPath);
+                        }
+                        if (_xmlPath != null)
+                        {
+                            File.Delete(_xmlPath);
+                        }
+                        if (_pmxmlPath != null)
+                        {
+                            File.Delete(_pmxmlPath);
+                        }
+                    }
+                    break;
+                case MessageBoxResult.No:
+                    break;
+            }
+
+
+        }
+        
+        private void deleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteVideoAndXMLs();
         }
 
 
